@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_server
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+api:
+  build: .
+  container_name: go_api
+  restart: always
+  depends_on:
+    - redis
+  ports:
+    - "9091:9091" 
+  environment:
+    - REDIS_HOST=redis
+    - REDIS_PORT=6379
+    - API_PORT=9091
+
+
+volumes:
+  redis_data:
